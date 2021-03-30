@@ -41,7 +41,7 @@ The distribution is positively skewed. Students tend to rate their courses highl
 ### Exercise 2
 
 ```{r scatter_1}
-ggplot(evals, aes(x=score, y=bty_avg)) +
+ggplot(evals, aes(x= bty_avg, y=score)) +
   geom_point() +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
 ```
@@ -52,7 +52,7 @@ association.
 ### Exercise 3
 
 ```{r jitter_1}
-ggplot(evals, aes(x=score, y=bty_avg)) +
+ggplot(evals, aes(x=bty_avg, y=score)) +
   geom_jitter() +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
 ```
@@ -75,7 +75,7 @@ lm_fit
 ###Exercise 5
 
 ```{r lin_reg_graph}
-ggplot(evals, aes(x=score, y=bty_avg)) + 
+ggplot(evals, aes(x=bty_avg, y=score)) + 
   geom_jitter() +
   geom_smooth(method=lm, se=FALSE, color="orange") +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
@@ -95,3 +95,16 @@ The mean of beauty score is 3.88034 when evaluation score is zero. I don't think
 glance(lm_fit$fit)
 ```
 $R^2$ = 0.035, so the explains 3.5% of the variance of beauty average. It also tells us that the residuals are quite large.
+
+### Exercise 9 
+Fit a new linear model called m_gen to predict average professor evaluation score based on gender of the professor. Based on the regression output, write the linear model and interpret the slope and intercept in context of the data.
+
+```{r linear_reg_1}
+m_gen <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_gen_fit <- m_gen %>% 
+          fit(score ~ gender, data = evals)
+m_gen_fit
+```
+A one unit change in score is more likely to be associated with male. Female is associated with a score of 4.0928.

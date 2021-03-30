@@ -53,7 +53,7 @@ would skew the distribution.
 ### Exercise 2
 
 ``` r
-ggplot(evals, aes(x=score, y=bty_avg)) +
+ggplot(evals, aes(x= bty_avg, y=score)) +
   geom_point() +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
 ```
@@ -67,7 +67,7 @@ associated with higher evaluations), it’s not a strong association.
 ### Exercise 3
 
 ``` r
-ggplot(evals, aes(x=score, y=bty_avg)) +
+ggplot(evals, aes(x=bty_avg, y=score)) +
   geom_jitter() +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
 ```
@@ -105,7 +105,7 @@ lm_fit
 \#\#\#Exercise 5
 
 ``` r
-ggplot(evals, aes(x=score, y=bty_avg)) + 
+ggplot(evals, aes(x=bty_avg, y=score)) + 
   geom_jitter() +
   geom_smooth(method=lm, se=FALSE, color="orange") +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
