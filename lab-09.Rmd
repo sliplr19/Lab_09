@@ -23,13 +23,27 @@ Okay, loading tidymodels ended up being kind of a nightmare, but now we're ready
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r score_bar}
+ggplot(evals, aes(x=factor(score)))+
+  geom_bar(stat="count", width=0.7, fill="black")+
+  labs(x = "Score", y = "Count", title = "Distribution of teaching evaluation scores") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r score_sum}
+evals %>%
+  summarise(averageRating = mean(score),
+             sdRating = sd(score))
+```
+
+The distribution is positively skewed. Students tend to rate their courses highly. The average score is 4.17 with a standard deviation of 0.54. I'm actually a bit surprised by this, but I would explain it by my perception of the gender disparity in evaluations (of course, I'm going to evaluate that later, so maybe this will change). Men tend to get high scores and there's more male professors than female professors, so that would skew the distribution.
 
 ### Exercise 2
 
-...
+```{r scatter_1}
+ggplot(evals, aes(x=score, y=bty_avg)) +
+  geom_point(size=2, shape=23) +
+  labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
+```
 
-Add exercise headings as needed.
+While it does seem true that, generally, higher beauty score is associated with higher evaluations (because the higher beauty scores are associated with higher evaluations), it's not a strong association. 
