@@ -42,8 +42,41 @@ The distribution is positively skewed. Students tend to rate their courses highl
 
 ```{r scatter_1}
 ggplot(evals, aes(x=score, y=bty_avg)) +
-  geom_point(size=2, shape=23) +
+  geom_point() +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
 ```
 
-While it does seem true that, generally, higher beauty score is associated with higher evaluations (because the higher beauty scores are associated with higher evaluations), it's not a strong association. 
+While it does seem true that, generally, higher beauty score is associated with higher evaluations (because the higher beauty scores are associated with higher evaluations), it's not a strong
+association. 
+
+### Exercise 3
+
+```{r jitter_1}
+ggplot(evals, aes(x=score, y=bty_avg)) +
+  geom_jitter() +
+  labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
+```
+
+Jitter makes it so the points aren't in straight lines. It makes it more clear that there might be a linear relationship between evaluation score and beauty score.
+
+### Exercise 4
+
+```{r linear_reg_1}
+lm_model <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+lm_fit <- lm_model %>% 
+          fit(score ~ bty_avg, data = evals)
+lm_fit
+```
+**Regression model**: score = 0.6664bty_avg + 3.88034
+
+
+###Exercise 5
+
+```{r lin_reg_graph}
+ggplot(evals, aes(x=score, y=bty_avg)) + 
+  geom_jitter() +
+  geom_smooth(method=lm, se=FALSE, color="orange") +
+  labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
+```
