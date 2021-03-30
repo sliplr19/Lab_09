@@ -78,6 +78,8 @@ Jitter makes it so the points aren’t in straight lines. It makes it more
 clear that there might be a linear relationship between evaluation score
 and beauty score.
 
+### Exercise 4
+
 ``` r
 lm_model <- linear_reg() %>% 
             set_engine('lm') %>% 
@@ -99,3 +101,42 @@ lm_fit
     ##     3.88034      0.06664
 
 **Regression model**: score = 0.6664bty\_avg + 3.88034
+
+\#\#\#Exercise 5
+
+``` r
+ggplot(evals, aes(x=score, y=bty_avg)) + 
+  geom_jitter() +
+  geom_smooth(method=lm, se=FALSE, color="orange") +
+  labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](lab-09_files/figure-gfm/lin_reg_graph-1.png)<!-- -->
+
+### Exercise 6
+
+A one unit change in score corresponds to a 0.6664 unit change in beauty
+score average.
+
+### Exercise 7
+
+The mean of beauty score is 3.88034 when evaluation score is zero. I
+don’t think this value is realistic in practice. I don’t think someone
+would ever teach so bad as to get 0 from every student.
+
+### Exercise 8
+
+``` r
+glance(lm_fit$fit)
+```
+
+    ## # A tibble: 1 x 12
+    ##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+    ##       <dbl>         <dbl> <dbl>     <dbl>     <dbl> <dbl>  <dbl> <dbl> <dbl>
+    ## 1    0.0350        0.0329 0.535      16.7 0.0000508     1  -366.  738.  751.
+    ## # ... with 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+
+\(R^2\) = 0.035, so the explains 3.5% of the variance of beauty average.
+It also tells us that the residuals are quite large.

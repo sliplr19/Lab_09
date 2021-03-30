@@ -80,3 +80,18 @@ ggplot(evals, aes(x=score, y=bty_avg)) +
   geom_smooth(method=lm, se=FALSE, color="orange") +
   labs(x = "Evaluation Score", y = "Beauty Score", title = "Evaluation score vs beauty score") 
 ```
+
+
+### Exercise 6
+
+A one unit change in score corresponds to a 0.6664 unit change in beauty score average.
+
+### Exercise 7 
+
+The mean of beauty score is 3.88034 when evaluation score is zero. I don't think this value is realistic in practice. I don't think someone would ever teach so bad as to get 0 from every student. 
+
+### Exercise 8
+```{r R_2}
+glance(lm_fit$fit)
+```
+$R^2$ = 0.035, so the explains 3.5% of the variance of beauty average. It also tells us that the residuals are quite large.
