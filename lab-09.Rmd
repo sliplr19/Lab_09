@@ -97,9 +97,9 @@ glance(lm_fit$fit)
 $R^2$ = 0.035, so the explains 3.5% of the variance of beauty average. It also tells us that the residuals are quite large.
 
 ### Exercise 9 
-Fit a new linear model called m_gen to predict average professor evaluation score based on gender of the professor. Based on the regression output, write the linear model and interpret the slope and intercept in context of the data.
 
-```{r linear_reg_1}
+
+```{r linear_reg_2}
 m_gen <- linear_reg() %>% 
             set_engine('lm') %>% 
             set_mode('regression')
@@ -107,4 +107,21 @@ m_gen_fit <- m_gen %>%
           fit(score ~ gender, data = evals)
 m_gen_fit
 ```
-A one unit change in score is more likely to be associated with male. Female is associated with a score of 4.0928.
+The average difference between male and female scores is 0.1415. Female is associated with a score of 4.0928.
+
+### Exercise 10
+
+The equation for females is score = 4.0928 + 0.1415gender. The equation for male is score = 4.2343 + 0.1415gender.
+
+### Exercise 11 
+
+```{r linear_reg_3}
+m_rank <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_rank_fit <- m_rank %>% 
+          fit(score ~ rank, data = evals)
+m_rank_fit
+```
+
+The equation is score = 4.2843 - 0.1297rank_TT - 0.1452rank_T. The average score for those who are lowested ranked of TT and T is 4.2843. As TT rank increases by one rank, holding T constant, scores decrease by 0.1297. As T rank increases by one rank, holding TT constant, scores decrease by 0.1452.
