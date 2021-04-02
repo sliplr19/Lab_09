@@ -124,4 +124,31 @@ m_rank_fit <- m_rank %>%
 m_rank_fit
 ```
 
-The equation is score = 4.2843 - 0.1297rank_TT - 0.1452rank_T. The average score for those who are lowested ranked of TT and T is 4.2843. As TT rank increases by one rank, holding T constant, scores decrease by 0.1297. As T rank increases by one rank, holding TT constant, scores decrease by 0.1452.
+The equation is score = 4.2843 - 0.1297rank_TT - 0.1452rank_T. The average score for teaching is 4.2843. As TT rank increases by one rank, holding T constant, scores decrease by 0.1297. As T rank increases by one rank, holding TT constant, scores decrease by 0.1452.
+
+### Exercise 12
+
+```{r rank_relevel}
+evals <- evals %>%
+  mutate(rank_relevel = case_when(
+    rank == "teaching" ~ -1,
+    rank == "tenure track" ~ 0,
+    rank == "tenured" ~ 1
+  ))
+```
+
+### Exercise 13
+
+
+```{r linear_reg_4}
+m_rank_relevel <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_rank_relevel_fit <- m_rank_relevel %>% 
+          fit(score ~ rank_relevel, data = evals)
+m_rank_relevel_fit
+glance(m_rank_relevel_fit$fit)
+```
+
+The equation is score = 4.19626 - 0.06601rank_relevel. When rank is tenure track, the average score is 4.19626. Being tenured is associated with lower scores. R^2 = 0.00975, so the model explains .975% of the variance. Again we see the residuals are large.
+
