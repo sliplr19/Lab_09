@@ -94,7 +94,7 @@ The mean of beauty score is 3.88034 when evaluation score is zero. I don't think
 ```{r R_2}
 glance(lm_fit$fit)
 ```
-$R^2$ = 0.035, so the explains 3.5% of the variance of beauty average. It also tells us that the residuals are quite large.
+$R^2$ = 0.035, so the model explains 3.5% of the variance. It also tells us that the residuals are quite large.
 
 ### Exercise 9 
 
@@ -152,3 +152,30 @@ glance(m_rank_relevel_fit$fit)
 
 The equation is score = 4.19626 - 0.06601rank_relevel. When rank is tenure track, the average score is 4.19626. Being tenured is associated with lower scores. R^2 = 0.00975, so the model explains .975% of the variance. Again we see the residuals are large.
 
+### Exercise 14
+
+
+```{r tenure_eligible}
+evals <- evals %>%
+  mutate(tenure_eligible = case_when(
+    rank == "teaching" ~ "no",
+    rank == "tenure track" ~ "yes",
+    rank == "tenured" ~ "yes"
+  ))
+```
+
+### Exercise 15
+
+Fit a new linear model called m_tenure_eligible to predict average professor evaluation score based on tenure_eligibleness of the professor. This is the new (regrouped) variable you created in Exercise 15. Based on the regression output, write the linear model and interpret the slopes and intercept in context of the data. Also determine and interpret the  
+R2 of the model.
+
+```{r linear_reg_5}
+m_tenure_eligible <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_tenure_eligible_fit <- m_tenure_eligible %>% 
+          fit(score ~ tenure_eligible, data = evals)
+m_tenure_eligible_fit
+glance(m_tenure_eligible_fit$fit)
+```
+The equation is score = 4.2843 - 0.1405tenure_eligible. For teaching faculty, the average score is 4.2843. Being tenure eligible is associated with a 0.1405 decrease in score. R^2 = 0.0115, meaning the model explains 1.15% of the variance and again there are large residuals.

@@ -91,7 +91,7 @@ lm_fit
 
     ## parsnip model object
     ## 
-    ## Fit time:  0ms 
+    ## Fit time:  20ms 
     ## 
     ## Call:
     ## stats::lm(formula = score ~ bty_avg, data = data)
@@ -138,5 +138,167 @@ glance(lm_fit$fit)
     ## 1    0.0350        0.0329 0.535      16.7 0.0000508     1  -366.  738.  751.
     ## # ... with 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
 
-\(R^2\) = 0.035, so the explains 3.5% of the variance of beauty average.
-It also tells us that the residuals are quite large.
+\(R^2\) = 0.035, so the model explains 3.5% of the variance. It also
+tells us that the residuals are quite large.
+
+### Exercise 9
+
+``` r
+m_gen <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_gen_fit <- m_gen %>% 
+          fit(score ~ gender, data = evals)
+m_gen_fit
+```
+
+    ## parsnip model object
+    ## 
+    ## Fit time:  0ms 
+    ## 
+    ## Call:
+    ## stats::lm(formula = score ~ gender, data = data)
+    ## 
+    ## Coefficients:
+    ## (Intercept)   gendermale  
+    ##      4.0928       0.1415
+
+The average difference between male and female scores is 0.1415. Female
+is associated with a score of 4.0928.
+
+### Exercise 10
+
+The equation for females is score = 4.0928 + 0.1415gender. The equation
+for male is score = 4.2343 + 0.1415gender.
+
+### Exercise 11
+
+``` r
+m_rank <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_rank_fit <- m_rank %>% 
+          fit(score ~ rank, data = evals)
+m_rank_fit
+```
+
+    ## parsnip model object
+    ## 
+    ## Fit time:  0ms 
+    ## 
+    ## Call:
+    ## stats::lm(formula = score ~ rank, data = data)
+    ## 
+    ## Coefficients:
+    ##      (Intercept)  ranktenure track       ranktenured  
+    ##           4.2843           -0.1297           -0.1452
+
+The equation is score = 4.2843 - 0.1297rank\_TT - 0.1452rank\_T. The
+average score for teaching is 4.2843. As TT rank increases by one rank,
+holding T constant, scores decrease by 0.1297. As T rank increases by
+one rank, holding TT constant, scores decrease by 0.1452.
+
+### Exercise 12
+
+``` r
+evals <- evals %>%
+  mutate(rank_relevel = case_when(
+    rank == "teaching" ~ -1,
+    rank == "tenure track" ~ 0,
+    rank == "tenured" ~ 1
+  ))
+```
+
+### Exercise 13
+
+``` r
+m_rank_relevel <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_rank_relevel_fit <- m_rank_relevel %>% 
+          fit(score ~ rank_relevel, data = evals)
+m_rank_relevel_fit
+```
+
+    ## parsnip model object
+    ## 
+    ## Fit time:  0ms 
+    ## 
+    ## Call:
+    ## stats::lm(formula = score ~ rank_relevel, data = data)
+    ## 
+    ## Coefficients:
+    ##  (Intercept)  rank_relevel  
+    ##      4.19626      -0.06601
+
+``` r
+glance(m_rank_relevel_fit$fit)
+```
+
+    ## # A tibble: 1 x 12
+    ##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+    ##       <dbl>         <dbl> <dbl>     <dbl>   <dbl> <dbl>  <dbl> <dbl> <dbl>
+    ## 1   0.00975       0.00760 0.542      4.54  0.0337     1  -372.  750.  763.
+    ## # ... with 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+
+The equation is score = 4.19626 - 0.06601rank\_relevel. When rank is
+tenure track, the average score is 4.19626. Being tenured is associated
+with lower scores. R^2 = 0.00975, so the model explains .975% of the
+variance. Again we see the residuals are large.
+
+### Exercise 14
+
+``` r
+evals <- evals %>%
+  mutate(tenure_eligible = case_when(
+    rank == "teaching" ~ "no",
+    rank == "tenure track" ~ "yes",
+    rank == "tenured" ~ "yes"
+  ))
+```
+
+### Exercise 15
+
+Fit a new linear model called m\_tenure\_eligible to predict average
+professor evaluation score based on tenure\_eligibleness of the
+professor. This is the new (regrouped) variable you created in Exercise
+15. Based on the regression output, write the linear model and interpret
+the slopes and intercept in context of the data. Also determine and
+interpret the  
+R2 of the model.
+
+``` r
+m_tenure_eligible <- linear_reg() %>% 
+            set_engine('lm') %>% 
+            set_mode('regression')
+m_tenure_eligible_fit <- m_tenure_eligible %>% 
+          fit(score ~ tenure_eligible, data = evals)
+m_tenure_eligible_fit
+```
+
+    ## parsnip model object
+    ## 
+    ## Fit time:  0ms 
+    ## 
+    ## Call:
+    ## stats::lm(formula = score ~ tenure_eligible, data = data)
+    ## 
+    ## Coefficients:
+    ##        (Intercept)  tenure_eligibleyes  
+    ##             4.2843             -0.1405
+
+``` r
+glance(m_tenure_eligible_fit$fit)
+```
+
+    ## # A tibble: 1 x 12
+    ##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+    ##       <dbl>         <dbl> <dbl>     <dbl>   <dbl> <dbl>  <dbl> <dbl> <dbl>
+    ## 1    0.0115       0.00935 0.541      5.36  0.0210     1  -372.  750.  762.
+    ## # ... with 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+
+The equation is score = 4.2843 - 0.1405tenure\_eligible. For teaching
+faculty, the average score is 4.2843. Being tenure eligible is
+associated with a 0.1405 decrease in score. R^2 = 0.0115, meaning the
+model explains 1.15% of the variance and again there are large
+residuals.
